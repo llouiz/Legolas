@@ -3,7 +3,7 @@ Gaming admin dashboard v.2
 
 ## Getting Started
 
-In order to run this project on your system, first of all, you will need to have a local server installed on your machine. If you are a Linux user you can install LAMP(Linux, Apache, MySQL, PHP) or WAMP(Windows, Apache, MySQL, PHP) for windows users.
+In order to run Legolas on your system, first of all, you will need to have a local server installed on your machine. If you are a Linux user you can install LAMP(Linux, Apache, MySQL, PHP) or WAMP(Windows, Apache, MySQL, PHP) for windows users.
 
 ### Installing
 
