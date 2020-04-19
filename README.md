@@ -27,4 +27,4 @@ See also the list of [contributors](https://github.com/luikz/Legolas/graphs/cont
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/Miraddo/CMS-Blog/blob/master/LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/luikz/Legolas/blob/master/LICENSE.md) file for details
