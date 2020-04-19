@@ -16,4 +16,15 @@ What will you need to do to have legolas running on your server? Basically, you'
 ## Built With
 
 * [Spring Boot](https://spring.io/projects/spring-data-jpa) - The web framework used
+* [JPA](https://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html) - Persist and retrieve information
 
+
+## Authors
+
+* **Luiz Carlos** - *Initial work* - [luikz](https://github.com/luikz)
+
+See also the list of [contributors](https://github.com/luikz/Legolas/graphs/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
