@@ -13,4 +13,7 @@ What will you need to do to have legolas running on your server? Basically, you'
 // src/resources/application.properties
 // src/resources/application.yml
 ```
+## Built With
+
+* [Spring Boot](https://spring.io/projects/spring-data-jpa) - The web framework used
 
