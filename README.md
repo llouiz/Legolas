@@ -10,8 +10,13 @@ In order to run Legolas on your system, first of all, you will need to have a lo
 What will you need to do to have legolas running on your server? Basically, you'll only have to change the application.properties/application.yml file configuration to yours and you're should be all set. 
 
 ```
-// src/resources/application.properties
-// src/resources/application.yml
+// src/
+      resources/
+          application.properties
+
+// src/
+      resources/
+          application.yml
 ```
 ## Built With
 
