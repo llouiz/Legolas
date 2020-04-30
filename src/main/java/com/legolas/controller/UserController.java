@@ -9,7 +9,7 @@ import com.legolas.bean.Accounts;
 import com.legolas.exception.ResourceNotFoundException;
 import com.legolas.repository.UserRepository;
 import com.legolas.security.CurrentUser;
-import com.legolas.security.UserPrincipal;
+import com.legolas.security.UserSecurity;
 
 @RestController
 public class UserController {
@@ -19,8 +19,8 @@ public class UserController {
 
 	@GetMapping("/user/me")
 	@PreAuthorize("hasRole('USER')")
-	public Accounts getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
-		return userRepository.findById(userPrincipal.getId())
-				.orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
+	public Accounts getCurrentUser(@CurrentUser UserSecurity userSecurity) {
+		return userRepository.findById(userSecurity.getId())
+				.orElseThrow(() -> new ResourceNotFoundException("User", "id", userSecurity.getId()));
 	}
 }
