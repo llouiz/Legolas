@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class WeaponController {
 	WeaponDAO wd;
 
 	@PostMapping("/weapon")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public Weapons add(@Valid @RequestBody Weapons w) {
 		return wd.save(w);
 	}
@@ -53,6 +55,7 @@ public class WeaponController {
 	}
 
 	@PutMapping("/weapon/{id}")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ResponseEntity<Weapons> updateWeapon(@PathVariable(value = "id") Long id, @Valid @RequestBody Weapons w) {
 		Weapons r = wd.findOne(id);
 
@@ -68,6 +71,7 @@ public class WeaponController {
 	}
 
 	@DeleteMapping("/weapon/{id}")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ResponseEntity<Weapons> delete(@PathVariable(value = "id") Long id) {
 		Weapons w = wd.findOne(id);
 
