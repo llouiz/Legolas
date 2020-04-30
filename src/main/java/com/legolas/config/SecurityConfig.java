@@ -3,6 +3,7 @@ package com.legolas.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,6 +15,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.legolas.security.CustomUserDetailsService;
 import com.legolas.security.RestAuthenticationEntryPoint;
@@ -25,8 +29,22 @@ import com.legolas.security.oauth2.OAuth2AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	private static final String[] PUBLIC_ENDPOINTS = {
+			"/auth/signup/**",
+			"/auth/login/**"
+	};
+
+	private static final String[] PUBLIC_ENDPOINTS_GET = { 	
+			"/auth/player/**",
+			"/auth/npc/**",
+			"/auth/weapon/**",
+			"/auth/armor/**",
+			"/auth/item/**",
+			"/oauth2/**"
+	};
 
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
@@ -39,9 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-
-	@Autowired
-	private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
 	@Bean
 	public TokenAuthenticationFilter tokenAuthenticationFilter() {
@@ -59,6 +74,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		final UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
+		src.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+
+		return src;
+	}
+
+	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
@@ -71,17 +94,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		http.cors().and().csrf().disable();
+
 		http.cors().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf()
 				.disable().formLogin().disable().httpBasic().disable().exceptionHandling()
-				.authenticationEntryPoint(new RestAuthenticationEntryPoint()).and().authorizeRequests()
-				.antMatchers("/", "/error", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg",
-						"/**/*.html", "/**/*.css", "/**/*.js")
-				.permitAll().antMatchers("/auth/**", "/oauth2/**").permitAll().anyRequest().authenticated().and()
-				.oauth2Login().authorizationEndpoint().baseUri("/oauth2/authorize")
+				.authenticationEntryPoint(new RestAuthenticationEntryPoint()).and().authorizeRequests().antMatchers(PUBLIC_ENDPOINTS).permitAll()
+				.antMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS_GET).permitAll().anyRequest().authenticated().and().oauth2Login()
+				.authorizationEndpoint().baseUri("/oauth2/authorize")
 				.authorizationRequestRepository(cookieAuthorizationRequestRepository()).and().redirectionEndpoint()
 				.baseUri("/oauth2/callback/*").and().userInfoEndpoint().userService(customOAuth2UserService).and()
 				.successHandler(oAuth2AuthenticationSuccessHandler).failureHandler(oAuth2AuthenticationFailureHandler);
 
 		http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
+
 }
