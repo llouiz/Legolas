@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,31 +26,35 @@ public class ArmorController {
 
 	@Autowired
 	ArmorDAO ad;
-	
+
 	@PostMapping("/armor")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public Armor add(@Valid @RequestBody Armor a) {
 		return ad.save(a);
 	}
-	
-	@GetMapping("/armor")
-	public List<Armor> getAllArmor(){
-		return ad.findAll();
-		
-	}
-	@GetMapping("/armor/{item_id}")
-	public ResponseEntity<Armor> getArmorById(@PathVariable(value = "item_id") Long item_id){
-		Armor a = ad.findOne(item_id);
 
-		if (item_id == null) {
+	@GetMapping("/armor")
+	public List<Armor> getAllArmor() {
+		return ad.findAll();
+
+	}
+
+	@GetMapping("/armor/{id}")
+	public ResponseEntity<Armor> getArmorById(@PathVariable(value = "id") Long id) {
+		Armor a = ad.findOne(id);
+
+		if (id == null) {
 			return ResponseEntity.notFound().build();
 		}
 
 		return ResponseEntity.ok().body(a);
 	}
-	@PutMapping("/armor/{item_id}")
-	public ResponseEntity<Armor> updateArmor(@PathVariable(value = "item_id") Long item_id, @Valid @RequestBody Armor a) {
 
-		Armor r = ad.findOne(item_id);
+	@PutMapping("/armor/{id}")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+	public ResponseEntity<Armor> updateArmor(@PathVariable(value = "id") Long id, @Valid @RequestBody Armor a) {
+
+		Armor r = ad.findOne(id);
 
 		if (r == null) {
 			return ResponseEntity.notFound().build();
@@ -61,9 +66,11 @@ public class ArmorController {
 
 		return ResponseEntity.ok(r);
 	}
-	@DeleteMapping("/armor/{item_id}")
-	public ResponseEntity<Armor> delete(@PathVariable(value = "item_id") Long item_id) {
-		Armor a = ad.findOne(item_id);
+
+	@DeleteMapping("/armor/{id}")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+	public ResponseEntity<Armor> delete(@PathVariable(value = "id") Long id) {
+		Armor a = ad.findOne(id);
 
 		if (a == null) {
 			ResponseEntity.notFound().build();
