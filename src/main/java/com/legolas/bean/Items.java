@@ -11,10 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "items")
+@Table(name = "inventory")
 public class Items implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -25,7 +24,6 @@ public class Items implements Serializable {
 	private int id;
 
 	@Column(name = "count", nullable = false)
-	@NotBlank
 	private int count;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -37,8 +35,8 @@ public class Items implements Serializable {
 	private Armor armor;
 
 	// -- object id of the player or clan,owner of this item
-	@OneToOne
-	@JoinColumn(name = "owner_id", referencedColumnName = "id")
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "player_id", referencedColumnName = "id")
 	private Players players;
 
 	public Items() {
