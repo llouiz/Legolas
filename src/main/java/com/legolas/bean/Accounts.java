@@ -1,16 +1,21 @@
 package com.legolas.bean;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.legolas.enums.ProfileAccess;
 
 @Entity
 @Table(name = "accounts")
@@ -28,14 +33,21 @@ public class Accounts {
 	private String email;
 
 	@Column(name = "password", nullable = false)
-	@JsonIgnore
 	private String password;
 
-	@OneToOne
-	@JoinColumn(name = "accesslevel", referencedColumnName = "id")
-	private AccessLevels accessLevels;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "user_profile")
+	private Set<Integer> profiles = new HashSet<>();
 
 	public Accounts() {
+	}
+
+	public Accounts(Long id, String name, @Email @Email String email, String password) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.password = password;
 	}
 
 	public Long getId() {
@@ -70,12 +82,11 @@ public class Accounts {
 		this.password = password;
 	}
 
-	public AccessLevels getAccessLevels() {
-		return accessLevels;
+	public void addProfile(ProfileAccess profile) {
+		profiles.add(profile.getCode());
 	}
 
-	public void setAccessLevels(AccessLevels accessLevels) {
-		this.accessLevels = accessLevels;
+	public Set<ProfileAccess> getProfiles() {
+		return profiles.stream().map(x -> ProfileAccess.toEnum(x)).collect(Collectors.toSet());
 	}
-
 }
