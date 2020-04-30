@@ -72,8 +72,7 @@ public class Players implements Serializable {
 	private int kills;
 
 	@OneToOne
-	@JoinColumns({ @JoinColumn(name = "account_id", referencedColumnName = "id"),
-			@JoinColumn(name = "accesslevel", referencedColumnName = "accesslevel") })
+	@JoinColumns({ @JoinColumn(name = "account_id", referencedColumnName = "id") })
 	private Accounts accounts;
 
 	public Players() {
@@ -190,14 +189,6 @@ public class Players implements Serializable {
 
 	public void setKills(int kills) {
 		this.kills = kills;
-	}
-
-	public Accounts getAccounts() {
-		return accounts;
-	}
-
-	public void setAccounts(Accounts accounts) {
-		this.accounts = accounts;
 	}
 
 }
