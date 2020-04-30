@@ -2,7 +2,7 @@ package com.legolas.security.oauth2.user;
 
 import java.util.Map;
 
-import com.legolas.enm.AuthProvider;
+import com.legolas.enums.AuthProvider;
 import com.legolas.exception.OAuth2AuthenticationProcessingException;
 
 public class OAuth2UserInfoFactory {
