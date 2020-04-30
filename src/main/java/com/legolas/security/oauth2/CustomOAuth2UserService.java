@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
 import com.legolas.bean.Accounts;
 import com.legolas.exception.OAuth2AuthenticationProcessingException;
 import com.legolas.repository.UserRepository;
-import com.legolas.security.UserPrincipal;
+import com.legolas.security.UserSecurity;
 import com.legolas.security.oauth2.user.OAuth2UserInfo;
 import com.legolas.security.oauth2.user.OAuth2UserInfoFactory;
 
@@ -55,7 +55,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
 		}
 
-		return UserPrincipal.create(user, oAuth2User.getAttributes());
+		return UserSecurity.create(user, oAuth2User.getAttributes());
 	}
 
 	private Accounts registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
