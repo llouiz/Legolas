@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,29 +27,31 @@ import com.legolas.dao.ItemsDAO;
 		@Autowired
 		ItemsDAO itemdao;
 		
-		@PostMapping("/itemdao")
+		@PostMapping("/item")
+		@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 		public Items add(@Valid @RequestBody Items items) {
 			return itemdao.save(items);
 		}
 		
-		@GetMapping("/itemdao")
+		@GetMapping("/item")
 		public List<Items> GetAllItem(){
 			return itemdao.findAll();
 		}
-		@GetMapping("/itemdao/{item_id}")
-		public ResponseEntity<Items> getItemById(@PathVariable(value = "item_id") Long item_id){
-			Items items = itemdao.findOne(item_id);
+		@GetMapping("/item/{id}")
+		public ResponseEntity<Items> getItemById(@PathVariable(value = "id") Long id){
+			Items items = itemdao.findOne(id);
 
-			if (item_id == null) {
+			if (id == null) {
 				return ResponseEntity.notFound().build();
 			}
 
 			return ResponseEntity.ok().body(items);
 		}
-		@PutMapping("/itemdao/{item_id}")
-		public ResponseEntity<Items> updateItem(@PathVariable(value = "item_id") Long item_id, @Valid @RequestBody Items items) {
+		@PutMapping("/item/{id}")
+		@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+		public ResponseEntity<Items> updateItem(@PathVariable(value = "id") Long id, @Valid @RequestBody Items items) {
 
-			Items r = itemdao.findOne(item_id);
+			Items r = itemdao.findOne(id);
 
 			if (r == null) {
 				return ResponseEntity.notFound().build();
@@ -60,9 +63,10 @@ import com.legolas.dao.ItemsDAO;
 
 			return ResponseEntity.ok(r);
 		}
-		@DeleteMapping("/itemdao/{item_id}")
-		public ResponseEntity<Items> delete(@PathVariable(value = "item_id") Long item_id) {
-			Items items = itemdao.findOne(item_id);
+		@DeleteMapping("/item/{id}")
+		@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+		public ResponseEntity<Items> delete(@PathVariable(value = "id") Long id) {
+			Items items = itemdao.findOne(id);
 
 			if (items == null) {
 				ResponseEntity.notFound().build();
