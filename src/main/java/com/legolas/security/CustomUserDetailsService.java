@@ -24,13 +24,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 		Accounts user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + email));
 
-		return UserPrincipal.create(user);
+		return UserSecurity.create(user);
 	}
 
 	@Transactional
 	public UserDetails loadUserById(Long id) {
 		Accounts user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 
-		return UserPrincipal.create(user);
+		return UserSecurity.create(user);
 	}
 }
