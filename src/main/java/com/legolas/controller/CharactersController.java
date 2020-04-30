@@ -29,6 +29,7 @@ public class CharactersController {
 	CharactersDAO cd;
 
 	@PostMapping("/characters")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public Players add(@Valid @RequestBody Players c) {
 		return cd.save(c);
 
@@ -52,6 +53,7 @@ public class CharactersController {
 	}
 
 	@PutMapping("/characters/{id}")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ResponseEntity<Players> updateCharacters(@PathVariable(value = "id") Long id,
 			@Valid @RequestBody Players c) {
 
@@ -69,6 +71,7 @@ public class CharactersController {
 	}
 
 	@DeleteMapping("/characters/{id}")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ResponseEntity<Players> delete(@PathVariable(value = "id") Long id) {
 		Players c = cd.findOne(id);
 
