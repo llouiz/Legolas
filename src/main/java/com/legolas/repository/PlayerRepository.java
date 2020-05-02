@@ -7,5 +7,4 @@ import com.legolas.bean.Players;
 
 @Repository
 public interface PlayerRepository extends JpaRepository <Players, Long>{
-
 }
