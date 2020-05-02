@@ -6,15 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.legolas.bean.Players;
-import com.legolas.repository.CharactersRepository;
+import com.legolas.repository.PlayerRepository;
 
 @Service
-public class CharactersDAO {
+public class PlayerDAO {
 	
 	@Autowired
-	CharactersRepository rep;
+	PlayerRepository rep;
 	
-	public Players  save(Players c) {
+	public Players save(Players c) {
 		return rep.save(c);
 		
 	}
