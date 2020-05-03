@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,32 +19,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.legolas.bean.Players;
-import com.legolas.dao.CharactersDAO;
+import com.legolas.dao.PlayerDAO;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/auth")
-public class CharactersController {
+public class PlayerController {
 
 	@Autowired
-	CharactersDAO cd;
+	PlayerDAO pd;
 
-	@PostMapping("/characters")
+	@PostMapping("/player")
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public Players add(@Valid @RequestBody Players c) {
-		return cd.save(c);
+		return pd.save(c);
 
 	}
 
-	@GetMapping("/characters")
-	public List<Players> getAllCharacters() {
-		return cd.findAll();
+	@GetMapping("/player")
+	public List<Players> getAllPlayers() {
+		return pd.findAll();
 
 	}
 
-	@GetMapping("/characters/{id}")
-	public ResponseEntity<Players> getCharactersById(@PathVariable(value = "id") Long id) {
-		Players c = cd.findOne(id);
+	@GetMapping("/player/{id}")
+	public ResponseEntity<Players> getPlayerById(@PathVariable(value = "id") Long id) {
+		Players c = pd.findOne(id);
 
 		if (id == null) {
 			return ResponseEntity.notFound().build();
@@ -52,12 +53,11 @@ public class CharactersController {
 		return ResponseEntity.ok().body(c);
 	}
 
-	@PutMapping("/characters/{id}")
+	@PutMapping("/player/{id}")
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
-	public ResponseEntity<Players> updateCharacters(@PathVariable(value = "id") Long id,
-			@Valid @RequestBody Players c) {
+	public ResponseEntity<Players> updatePlayer(@PathVariable(value = "id") Long id, @Valid @RequestBody Players c) {
 
-		Players r = cd.findOne(id);
+		Players r = pd.findOne(id);
 
 		if (r == null) {
 			return ResponseEntity.notFound().build();
@@ -65,21 +65,21 @@ public class CharactersController {
 
 		BeanUtils.copyProperties(c, r, "obj_id");
 
-		r = cd.save(r);
+		r = pd.save(r);
 
 		return ResponseEntity.ok(r);
 	}
 
-	@DeleteMapping("/characters/{id}")
+	@DeleteMapping("/player/{id}")
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ResponseEntity<Players> delete(@PathVariable(value = "id") Long id) {
-		Players c = cd.findOne(id);
+		Players c = pd.findOne(id);
 
 		if (c == null) {
 			ResponseEntity.notFound().build();
 		}
 
-		cd.delete(c);
+		pd.delete(c);
 
 		return ResponseEntity.ok().build();
 	}
