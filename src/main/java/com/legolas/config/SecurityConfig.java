@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	};
 
 	private static final String[] PUBLIC_ENDPOINTS_GET = { 	
-			"/auth/characters/**",
+			"/auth/player/**",
 			"/auth/npc/**",
 			"/auth/weapon/**",
 			"/auth/armor/**",
