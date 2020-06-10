@@ -1,9 +1,9 @@
 package com.legolas.security;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.legolas.bean.Accounts;
-import com.legolas.enums.ProfileAccess;
 
 public class UserSecurity implements OAuth2User, UserDetails {
 	private static final long serialVersionUID = 1L;
@@ -22,29 +21,30 @@ public class UserSecurity implements OAuth2User, UserDetails {
 	private Collection<? extends GrantedAuthority> authorities;
 	private Map<String, Object> attributes;
 
-	public UserSecurity(Long id, String email, String password, Set<ProfileAccess> profiles) {
+	public UserSecurity(Long id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
-		this.email = email;
-		this.password = password;
-		this.authorities = profiles.stream().map(x -> new SimpleGrantedAuthority(x.getDesc()))
-				.collect(Collectors.toList());
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
 	}
 
-	public UserSecurity(Long id, String email, String password) {
-		this.id = id;
-		this.email = email;
-		this.password = password;
+	public static UserSecurity create(Accounts acc) {
+
+		List<GrantedAuthority> authorities = Collections.
+                singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+
+        return new UserSecurity(
+                acc.getId(),
+                acc.getEmail(),
+                acc.getPassword(),
+                authorities
+        );
 	}
 
-	public static UserSecurity create(Accounts user) {
-
-		return new UserSecurity(user.getId(), user.getEmail(), user.getPassword());
-	}
-
-	public static UserSecurity create(Accounts user, Map<String, Object> attributes) {
-		UserSecurity userSecurity = UserSecurity.create(user);
-		userSecurity.setAttributes(attributes);
-		return userSecurity;
+	public static UserSecurity create(Accounts acc, Map<String, Object> attributes) {
+		UserSecurity userPrincipal = UserSecurity.create(acc);
+        userPrincipal.setAttributes(attributes);
+        return userPrincipal;
 	}
 
 	public Long getId() {
