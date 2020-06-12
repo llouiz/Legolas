@@ -8,9 +8,9 @@ import com.legolas.config.AppProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties(AppProperties.class)
-public class SpringSocialApplication {
+public class LegolasApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringSocialApplication.class, args);
+		SpringApplication.run(LegolasApplication.class, args);
 	}
 }
