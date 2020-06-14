@@ -1,4 +1,4 @@
-package com.example.legolas;
+package com.example.springsocial;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
