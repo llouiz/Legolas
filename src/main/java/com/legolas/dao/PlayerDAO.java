@@ -29,5 +29,9 @@ public class PlayerDAO {
 	public void delete(Players c) {
 		rep.delete(c);
 	}
+	
+	public void deleteAll() {
+		rep.deleteAll();
+	}
 
 }
