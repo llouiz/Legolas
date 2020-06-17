@@ -28,4 +28,8 @@ public class ArmorDAO {
 	public void delete(Armor a) {
 		rep.delete(a);
 	}
+	
+	public void deleteAll() {
+		rep.deleteAll();
+	}
 }
