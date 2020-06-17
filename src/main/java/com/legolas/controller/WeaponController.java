@@ -23,7 +23,6 @@ import com.legolas.bean.ApiResponse;
 import com.legolas.bean.Weapons;
 import com.legolas.dao.WeaponDAO;
 
-
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/auth")
@@ -34,45 +33,36 @@ public class WeaponController {
 
 	@PostMapping("/weapon")
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
-	public Weapons add(@Valid @RequestBody Weapons w) {
-		return wd.save(w);
+	public ApiResponse<Weapons> add(@Valid @RequestBody Weapons w) {
+		return new ApiResponse<>(HttpStatus.OK.value(), "Weapon saved successfully.", wd.save(w));
 	}
 
 	@GetMapping("/weapon")
 	public ApiResponse<List<Weapons>> getAllWeapons() {
-		return new ApiResponse<>(HttpStatus.OK.value(), "User list fetched successfully.", wd.findAll());
+		return new ApiResponse<>(HttpStatus.OK.value(), "Weapon list fetched successfully.", wd.findAll());
 	}
 
 	@GetMapping("/weapon/{id}")
-	public ResponseEntity<Weapons> getWeaponById(@PathVariable(value = "id") Long id) {
-		Weapons w = wd.findOne(id);
-
-		if (id == null) {
-			return ResponseEntity.notFound().build();
-		}
-
-		return ResponseEntity.ok().body(w);
+	public ApiResponse<Weapons> getWeaponById(@PathVariable(value = "id") Long id) {
+		return new ApiResponse<>(HttpStatus.OK.value(), "Weapon fetched successfully.", wd.findOne(id));
 	}
 
 	@PutMapping("/weapon/{id}")
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
-	public ResponseEntity<Weapons> updateWeapon(@PathVariable(value = "id") Long id, @Valid @RequestBody Weapons w) {
-		Weapons r = wd.findOne(id);
+	public ApiResponse<Weapons> updateWeapon(@PathVariable(value = "id") Long id, @Valid @RequestBody Weapons w) {
+		Weapons r = wd.findOne(w.getId());
 
-		if (id == null) {
-			ResponseEntity.notFound().build();
+		if (id != null) {
+			BeanUtils.copyProperties(w, r, "id");
+			r = wd.save(r);
 		}
 
-		BeanUtils.copyProperties(w, r, "id");
-
-		r = wd.save(r);
-
-		return ResponseEntity.ok(r);
+		return new ApiResponse<>(HttpStatus.OK.value(), "Weapon updated successfully.", r);
 	}
 
 	@DeleteMapping("/weapon/{id}")
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
-	public ResponseEntity<Weapons> delete(@PathVariable(value = "id") Long id) {
+	public ApiResponse<Void> delete(@PathVariable(value = "id") Long id) {
 		Weapons w = wd.findOne(id);
 
 		if (w == null) {
@@ -81,8 +71,17 @@ public class WeaponController {
 
 		wd.delete(w);
 
-		return ResponseEntity.ok().build();
+		return new ApiResponse<>(HttpStatus.OK.value(), "Weapon deleted successfully.", null);
 
+	}
+
+	@DeleteMapping("/weapon/all")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+	public ApiResponse<Void> deleteAll() {
+
+		wd.deleteAll();
+
+		return new ApiResponse<>(HttpStatus.OK.value(), "Weapon deleted successfully.", null);
 	}
 
 }
