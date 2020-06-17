@@ -32,6 +32,7 @@ public class PlayerController {
 	PlayerDAO pd;
 
 	@PostMapping("/player")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ApiResponse<Players> add(@Valid @RequestBody Players p) {
 		return new ApiResponse<>(HttpStatus.OK.value(), "Player saved successfully.", pd.save(p));
 
@@ -49,6 +50,7 @@ public class PlayerController {
 	}
 
 	@PutMapping("/player/{id}")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ApiResponse<Players> updatePlayer(@PathVariable(value = "id") Long id, @Valid @RequestBody Players p) {
 
 		Players r = pd.findOne(p.getId());
@@ -62,6 +64,7 @@ public class PlayerController {
 	}
 
 	@DeleteMapping("/player/{id}")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ApiResponse<Void> delete(@PathVariable(value = "id") Long id) {
 		Players p = pd.findOne(id);
 
@@ -75,6 +78,7 @@ public class PlayerController {
 	}
 
 	@DeleteMapping("/player/all")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ApiResponse<Void> deleteAll() {
 
 		pd.deleteAll();
