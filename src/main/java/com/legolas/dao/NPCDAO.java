@@ -30,4 +30,8 @@ public class NPCDAO {
 	public void delete(NPC c) {
 		rep.delete(c);
 	}
+
+	public void deleteAll() {
+		rep.deleteAll();
+	}
 }
