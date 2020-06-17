@@ -1,4 +1,4 @@
-package com.example.springsocial.controller;
+package com.legolas.controller;
 
 import java.util.List;
 
@@ -6,8 +6,10 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.springsocial.dao.PlayerDAO;
-import com.example.springsocial.model.ApiResponse;
-import com.example.springsocial.model.Players;
+import com.legolas.bean.ApiResponse;
+import com.legolas.bean.Players;
+import com.legolas.dao.PlayerDAO;
 
 @CrossOrigin("*")
 @RestController
@@ -31,6 +33,7 @@ public class PlayerController {
 	PlayerDAO pd;
 
 	@PostMapping("/player")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ApiResponse<Players> add(@Valid @RequestBody Players p) {
 		return new ApiResponse<>(HttpStatus.OK.value(), "Player saved successfully.", pd.save(p));
 
@@ -48,6 +51,7 @@ public class PlayerController {
 	}
 
 	@PutMapping("/player/{id}")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ApiResponse<Players> updatePlayer(@PathVariable(value = "id") Long id, @Valid @RequestBody Players p) {
 
 		Players r = pd.findOne(p.getId());
@@ -61,6 +65,7 @@ public class PlayerController {
 	}
 
 	@DeleteMapping("/player/{id}")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ApiResponse<Void> delete(@PathVariable(value = "id") Long id) {
 		Players p = pd.findOne(id);
 
@@ -74,10 +79,17 @@ public class PlayerController {
 	}
 
 	@DeleteMapping("/player/all")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ApiResponse<Void> deleteAll() {
 
 		pd.deleteAll();
 
 		return new ApiResponse<>(HttpStatus.OK.value(), "Players deleted successfully.", null);
+	}
+
+	@GetMapping("/player/topKill")
+	public ApiResponse<List<Players>> getTopKillList(Long kills) {
+		return new ApiResponse<>(HttpStatus.OK.value(), "Top kill list fetched successfully.",
+				pd.getAllTopKills(Sort.by(Sort.Direction.DESC, "kills")));
 	}
 }
