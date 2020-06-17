@@ -77,6 +77,7 @@ public class NPCController {
 	}
 
 	@DeleteMapping("/npc/all")
+	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 	public ApiResponse<Void> deleteAll() {
 
 		npcd.deleteAll();
