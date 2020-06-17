@@ -24,15 +24,15 @@ public class Accounts {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "name", length = 80, nullable = false)
+	@Column(name = "name")
 	private String name;
 
 	@Email
-	@Column(name = "email", length = 80, nullable = false)
+	@Column(name = "email")
 	@Email
 	private String email;
 
-	@Column(name = "password", nullable = false)
+	@Column(name = "password")
 	private String password;
 
 	@ElementCollection(fetch = FetchType.EAGER)
