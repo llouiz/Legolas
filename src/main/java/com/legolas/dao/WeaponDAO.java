@@ -29,4 +29,8 @@ public class WeaponDAO {
 	public void delete(Weapons w) {
 		rep.delete(w);
 	}
+	
+	public void deleteAll() {
+		rep.deleteAll();
+	}
 }
