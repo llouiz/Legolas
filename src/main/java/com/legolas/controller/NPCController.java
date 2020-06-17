@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.legolas.bean.ApiResponse;
 import com.legolas.bean.NPC;
 import com.legolas.dao.NPCDAO;
 
@@ -31,48 +33,38 @@ public class NPCController {
 
 	@PostMapping("/npc")
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
-	public NPC add(@Valid @RequestBody NPC npc) {
-		return npcd.save(npc);
+	public ApiResponse<NPC> add(@Valid @RequestBody NPC npc) {
+		return new ApiResponse<>(HttpStatus.OK.value(), "NPC saved successfully.", npcd.save(npc));
 
 	}
 
 	@GetMapping("/npc")
-	public List<NPC> getAllNPCs() {
-		return npcd.findAll();
+	public ApiResponse<List<NPC>> getAllNPCs() {
+		return new ApiResponse<>(HttpStatus.OK.value(), "NPC saved successfully.", npcd.findAll());
 
 	}
 
 	@GetMapping("/npc/{id}")
-	public ResponseEntity<NPC> getNPCById(@PathVariable(value = "id") Long id) {
-		NPC npc = npcd.findOne(id);
-
-		if (id == null) {
-			return ResponseEntity.notFound().build();
-		}
-
-		return ResponseEntity.ok().body(npc);
+	public ApiResponse<NPC> getNPCById(@PathVariable(value = "id") Long id) {
+		return new ApiResponse<>(HttpStatus.OK.value(), "Player fetched successfully.", npcd.findOne(id));
 	}
 
 	@PutMapping("/npc/{id}")
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
-	public ResponseEntity<NPC> updateNPC(@PathVariable(value = "id") Long id, @Valid @RequestBody NPC npc) {
+	public ApiResponse<NPC> updateNPC(@PathVariable(value = "id") Long id, @Valid @RequestBody NPC npc) {
 
 		NPC r = npcd.findOne(id);
 
-		if (r == null) {
-			return ResponseEntity.notFound().build();
+		if (r != null) {
+			BeanUtils.copyProperties(npc, r, "obj_id");
+			r = npcd.save(r);
 		}
-
-		BeanUtils.copyProperties(npc, r, "obj_id");
-
-		r = npcd.save(r);
-
-		return ResponseEntity.ok(r);
+		return new ApiResponse<>(HttpStatus.OK.value(), "NPC updated successfully.", r);
 	}
 
 	@DeleteMapping("/npc/{id}")
 	@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
-	public ResponseEntity<NPC> delete(@PathVariable(value = "id") Long id) {
+	public ApiResponse<Void> delete(@PathVariable(value = "id") Long id) {
 		NPC npc = npcd.findOne(id);
 
 		if (npc == null) {
@@ -81,6 +73,14 @@ public class NPCController {
 
 		npcd.delete(npc);
 
-		return ResponseEntity.ok().build();
+		return new ApiResponse<>(HttpStatus.OK.value(), "NPC deleted successfully.", null);
+	}
+
+	@DeleteMapping("/npc/all")
+	public ApiResponse<Void> deleteAll() {
+
+		npcd.deleteAll();
+
+		return new ApiResponse<>(HttpStatus.OK.value(), "NPCs deleted successfully.", null);
 	}
 }
