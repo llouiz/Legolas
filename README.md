@@ -26,10 +26,10 @@ What will you need to do to have legolas running on your server? Basically, you'
 
 ## Authors
 
-* **Luiz Carlos** - *Initial work* - [luikz](https://github.com/luikz)
+* **Luiz Carlos** - *Initial work* - [llouize](https://github.com/llouize)
 
-See also the list of [contributors](https://github.com/luikz/Legolas/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/llouize/Legolas/graphs/contributors) who participated in this project.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/luikz/Legolas/blob/master/LICENSE.md) file for details 
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/llouize/Legolas/blob/master/LICENSE.md) file for details 
