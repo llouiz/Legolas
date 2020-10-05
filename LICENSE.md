@@ -1,6 +1,6 @@
 MIT License
 
-- Copyright (c) 2020 Luikz
+- Copyright (c) 2020 LLouize
 
 Available for use under the [MIT License](http://en.wikipedia.org/wiki/MIT_License)
 
